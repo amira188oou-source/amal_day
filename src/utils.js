@@ -1,27 +1,37 @@
 // ===============================
 // Helpers utils.js
 // ===============================
-
 function setProgress() {
-    document.getElementById("progress").innerText =
-        `Step ${Math.min(stepIndex, 26)} / 26`;
+    const val = `Step ${Math.min(stepIndex, 26)} / 26`;
+    // Update any element with id="progress" (even if duplicates exist)
+    const els = document.querySelectorAll('[id="progress"]');
+    els.forEach(el => { if (el) el.innerText = val; });
 }
 
 function clearUI() {
-    document.getElementById("text").innerHTML = "";
-    document.getElementById("subtext").innerHTML = "";
-    document.getElementById("timer").innerHTML = "";
-    document.getElementById("dice").innerHTML = "";
+    const byId = id => document.getElementById(id);
+    const textEl = byId("text");
+    if (textEl) textEl.innerHTML = "";
 
-    const res = document.getElementById("result");
-    if (res) {
-        res.style.display = "none";
-        res.innerHTML = "";
-    }
+    const subEl = byId("subtext");
+    if (subEl) subEl.innerHTML = "";
 
-    document.getElementById("checklist").innerHTML = "";
-    document.getElementById("buttons").innerHTML = "";
+    const timerEl = byId("timer");
+    if (timerEl) timerEl.innerHTML = "";
+
+    const diceEl = byId("dice");
+    if (diceEl) diceEl.innerHTML = "";
+
+    const res = byId("result");
+    if (res) { res.style.display = "none"; res.innerHTML = ""; }
+
+    const cl = byId("checklist");
+    if (cl) cl.innerHTML = "";
+
+    const btns = byId("buttons");
+    if (btns) btns.innerHTML = "";
 }
+
 
 function formatMinSec(sec) {
     const m = Math.floor(sec / 60);
@@ -120,7 +130,7 @@ function nextUpcomingMeal() {
     // fasting: time until iftar (next occurrence)
     if (appConfig.fasting) {
         const iftar = timeStrToDate(appConfig.iftarTime);
-        iftar.setSeconds(0,0);
+        iftar.setSeconds(0, 0);
         if (iftar <= now) iftar.setDate(iftar.getDate() + 1);
         return { fasting: true, label: "Iftar", time: appConfig.iftarTime, inMin: minutesUntil(now, iftar), targetDate: iftar };
     }
@@ -128,13 +138,13 @@ function nextUpcomingMeal() {
     // Non-fasting: compute next meal occurrence (treat past times as tomorrow)
     const candidates = (appConfig.meals || []).map((m, idx) => {
         const t = timeStrToDate(m.time);
-        t.setSeconds(0,0);
+        t.setSeconds(0, 0);
         if (t <= now) t.setDate(t.getDate() + 1);
         return { idx, label: m.label, time: m.time, targetDate: t };
     }).filter(c => !mealStatus[c.idx]?.done);
 
     if (!candidates.length) return null;
-    candidates.sort((a,b) => a.targetDate - b.targetDate);
+    candidates.sort((a, b) => a.targetDate - b.targetDate);
     const n = candidates[0];
     return { fasting: false, label: n.label, time: n.time, inMin: minutesUntil(now, n.targetDate), targetDate: n.targetDate };
 }
@@ -178,7 +188,7 @@ function nextUpcomingMeal() {
     // Fasting: show time until iftar
     if (appConfig.fasting) {
         const iftar = timeStrToDate(appConfig.iftarTime);
-        iftar.setSeconds(0,0);
+        iftar.setSeconds(0, 0);
         // if already past today, move to tomorrow
         if (iftar <= now) iftar.setDate(iftar.getDate() + 1);
         const mins = minutesUntil(now, iftar);
@@ -188,14 +198,14 @@ function nextUpcomingMeal() {
     // Non-fasting: consider meals not done and pick the soonest future occurrence
     const candidates = (appConfig.meals || []).map((m, idx) => {
         const t = timeStrToDate(m.time);
-        t.setSeconds(0,0);
+        t.setSeconds(0, 0);
         // if time is earlier than now treat as tomorrow
         if (t <= now) t.setDate(t.getDate() + 1);
         return { idx, label: m.label, time: m.time, targetDate: t };
     }).filter(c => !mealStatus[c.idx]?.done);
 
     if (candidates.length === 0) return null;
-    candidates.sort((a,b) => a.targetDate - b.targetDate);
+    candidates.sort((a, b) => a.targetDate - b.targetDate);
     const n = candidates[0];
     return { fasting: false, label: n.label, time: n.time, inMin: minutesUntil(now, n.targetDate), targetDate: n.targetDate };
 }
@@ -308,3 +318,114 @@ function randomEnergy() {
         Math.floor(Math.random() * energyStops.length)
     ];
 }
+
+function pickActivityByMood(type) {
+    const mood = dayMeta.mood || "calm";
+    const activities = MOOD_ACTIVITIES[mood];
+    if (!activities) return null;
+
+    const typeGroup = activities.find(a => a.type === type);
+    if (!typeGroup || !typeGroup.activities) return null;
+
+    return typeGroup.activities[Math.floor(Math.random() * typeGroup.activities.length)];
+}
+
+function getBreakDurationByMood() {
+    const mood = dayMeta.mood || "calm";
+    const breakGroup = MOOD_ACTIVITIES[mood]?.find(a => a.type === "break");
+    return breakGroup?.duration || 10;
+}
+
+function getPauseDurationByMood() {
+    const mood = dayMeta.mood || "calm";
+    const pauseGroup = MOOD_ACTIVITIES[mood]?.find(a => a.type === "pause");
+    return pauseGroup?.duration || 5;
+}
+
+function getTransitionMessageByMood() {
+    const mood = dayMeta.mood || "calm";
+    const transGroup = MOOD_ACTIVITIES[mood]?.find(a => a.type === "transition");
+    if (!transGroup || !transGroup.activities) return "Ready for the next session?";
+    return transGroup.activities[Math.floor(Math.random() * transGroup.activities.length)];
+}
+
+// Body condition-aware activity picker
+function pickBodyAwareActivity(type) {
+    const body = dayMeta.bodyCondition || "healthy";
+    const bodyInfo = BODY_CONDITION_ACTIVITIES[body];
+    if (!bodyInfo) return null;
+
+    let activities = [];
+    if (type === "break") {
+        activities = bodyInfo.breakActivities;
+    }
+
+    if (!activities.length) return null;
+    return activities[Math.floor(Math.random() * activities.length)];
+}
+
+function shouldAvoidActivity(activityName) {
+    const body = dayMeta.bodyCondition || "healthy";
+    const bodyInfo = BODY_CONDITION_ACTIVITIES[body];
+    if (!bodyInfo) return false;
+    return bodyInfo.avoidActivities.some(avoid => activityName.toLowerCase().includes(avoid.toLowerCase()));
+}
+
+function getCorrectActivityDuration(activityType) {
+    // Return correct duration based on mood + body condition
+    switch (activityType) {
+        case "break":
+            return getBreakDurationByMood();
+        case "pause":
+            return getPauseDurationByMood();
+        case "grounding":
+        case "silence":
+            return 2;
+        case "morningAudio":
+            return 5;
+        case "quranMemo":
+            return 15;
+        case "quranReading":
+            return 15;
+        case "writing":
+            return 30;
+        case "research":
+            return 30;
+        case "lunch":
+            return appConfig.fasting && isBeforeIftar() ? 10 : 25;
+        default:
+            return 5;
+    }
+}
+
+function startOrResumeTimer(durationMinutes, onEnd) {
+    // Smart timer start/resume for both normal and restore flows
+    if (timerRemaining > 0) {
+        // Timer was already running — resume it
+        if (typeof resumeTimer === "function") {
+            resumeTimer(onEnd);
+        }
+    } else {
+        // Fresh start
+        startTimer(durationMinutes, onEnd);
+    }
+}
+
+function showFloatingNext(label = "Next", action = next) {
+    removeFloatingNext();
+
+    const btn = document.createElement("button");
+    btn.className = "floating-next-btn";
+    btn.textContent = label;
+    btn.onclick = action;
+
+    document.getElementById("app").appendChild(btn);
+    document.getElementById("app").classList.add("has-floating-next");
+}
+
+function removeFloatingNext() {
+    const btn = document.querySelector(".floating-next-btn");
+    if (btn) btn.remove();
+    document.getElementById("app").classList.remove("has-floating-next");
+}
+

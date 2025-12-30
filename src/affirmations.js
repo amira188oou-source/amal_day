@@ -1,31 +1,40 @@
-// ===============================
-// Affirmations flow affirmations.js
-// ===============================
-function showAffirmations(onDone){
-  const ix = currentAffirmationIx;
-  const isLast = ix >= affirmationsArabic.length - 1;
+function showAffirmations(onDone) {
+    if (currentAffirmationIx >= affirmationsArabic.length) {
+        onDone();
+        return;
+    }
 
-  const her = dayMeta.userProfile?.name
-    ? `, ${dayMeta.userProfile.name}`
-    : "";
+    // Get mood-based affirmations
+    const mood = dayMeta.mood || "calm";
+    const affirmList = AFFIRMATIONS[mood]?.english || affirmationsEnglish;
+    const affirmation = affirmList[currentAffirmationIx % affirmList.length];
 
-  render({
-    text: "✨ Affirmation" + her,
-    subtext: `
-      <div class="affirm">${affirmationsArabic[ix]}</div>
-      <div class="note">${affirmationsEnglish[ix]}</div>
-    `,
-    buttons: [{
-      label: isLast ? "Continue" : "Next affirmation",
-      action: () => {
-        currentAffirmationIx++;
+    // Also get Arabic version if available
+    const affirmArabic = AFFIRMATIONS[mood]?.arabic?.[currentAffirmationIx % affirmList.length] || "✨";
 
-        if (currentAffirmationIx < affirmationsArabic.length) {
-          showAffirmations(onDone);
-        } else {
-          setTimeout(() => onDone && onDone(), 0);
-        }
-      }
-    }]
-  });
+    clearUI();
+    setProgress();
+
+    document.getElementById("text").innerHTML = affirmation;
+    document.getElementById("subtext").innerHTML = `<span class="note">${affirmArabic}</span>`;
+
+    const res = document.getElementById("result");
+    res.style.display = "block";
+    res.innerHTML = "";
+
+    const affirmCard = document.createElement("div");
+    affirmCard.className = "affirm";
+    affirmCard.innerHTML = `
+        <div style="font-size: 48px; margin: 20px 0;">✨</div>
+        <div style="font-size: 18px; line-height: 1.6; margin: 16px 0;">"${affirmation}"</div>
+        <div style="color: var(--muted); font-size: 14px; margin-top: 12px;">${affirmArabic}</div>
+    `;
+    res.appendChild(affirmCard);
+
+    document.getElementById("buttons").appendChild(
+        button("I can do it", () => {
+            currentAffirmationIx++;
+            onDone && onDone();
+        })
+    );
 }

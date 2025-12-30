@@ -69,7 +69,7 @@ function saveAppState() {
     try {
         const payload = {
             stepIndex,
-            dayMeta,
+            dayMeta,  // This now includes mood & bodyCondition
             sessions,
             waves,
             runningQueue,
@@ -82,6 +82,7 @@ function saveAppState() {
             timerPaused
         };
         localStorage.setItem(stateStorageKey(), JSON.stringify(payload));
+        console.log("State saved with mood:", dayMeta.mood, "body:", dayMeta.bodyCondition);
     } catch (e) { console.warn("saveAppState failed", e); }
 }
 

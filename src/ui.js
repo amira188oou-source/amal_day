@@ -1,42 +1,68 @@
 // Rendering and buttons ui.js
 
-// ...existing code...
-function render({ text = "", subtext = "", buttons = [], showDice = false, resultHTML = null }) {
+function render({ text = "", subtext = "", buttons = [], showDice = false, resultHTML = null, center = false }) {
     clearUI();
     setProgress();
 
-    // Use template strings for innerHTML
-    document.getElementById("text").innerHTML = `<div class="fade-in">${text}</div>`;
+    // Toggle on #stage, not #main
+    const stage = document.getElementById("stage");
+    if (stage) stage.classList.toggle("center-stage", !!center);
 
-    // Do NOT inject meal/iftar line into main subtext (we show it as top-left floating notification)
-    document.getElementById("subtext").innerHTML = subtext ? `<div class="fade-in">${subtext}</div>` : "";
+    const textEl = document.getElementById("text");
+    if (textEl) textEl.innerHTML = `<div class="fade-in">${text}</div>`;
 
-    // Ensure buttons array always has at least a Next fallback
+    const subEl = document.getElementById("subtext");
+    if (subEl) subEl.innerHTML = subtext ? `<div class="fade-in">${subtext}</div>` : "";
+
     if (!Array.isArray(buttons) || buttons.length === 0) {
         buttons = [{ label: "Next", action: next }];
     }
 
-    if (showDice) document.getElementById("dice").innerText = "🎲";
-    else document.getElementById("dice").innerText = "";
+    const diceEl = document.getElementById("dice");
+    if (diceEl) diceEl.innerText = showDice ? "🎲" : "";
 
     if (resultHTML) {
         const res = document.getElementById("result");
-        res.style.display = "block";
-        res.innerHTML = resultHTML;
+        if (res) {
+            res.style.display = "block";
+            res.innerHTML = resultHTML;
+        }
     }
 
-    renderMealBar(); // ensure floating meal bar is present (outside main area)
+    renderMealBar();
 
     const btnWrap = document.getElementById("buttons");
-    btnWrap.innerHTML = ""; // ensure cleared
-    buttons.forEach(b => {
-        const btn = document.createElement("button");
-        btn.innerText = b.label ?? "Action";
-        if (b.variant === "secondary") btn.classList.add("secondary");
-        if (b.variant === "ghost") btn.classList.add("ghost");
-        btn.onclick = () => b.action && b.action();
-        btnWrap.appendChild(btn);
-    });
+    if (btnWrap) {
+        btnWrap.innerHTML = "";
+        buttons.forEach(b => {
+            const btn = document.createElement("button");
+            btn.innerText = b.label ?? "Action";
+            btn.classList.add("action-btn", "primary");
+            if (b.variant === "secondary") { btn.classList.remove("primary"); btn.classList.add("secondary"); }
+            if (b.variant === "ghost") { btn.classList.remove("primary"); btn.classList.add("ghost"); }
+            btn.onclick = () => b.action && b.action();
+            if (b.label === "Next" || b.label === "Done" || b.label === "Continue") {
+                btn.classList.add("floating-next-btn");
+            }
+            btnWrap.appendChild(btn);
+        });
+    }
+}
+
+function button(label, action, variant) {
+    const b = document.createElement("button");
+    b.innerText = label || "Action";
+    b.classList.add("action-btn");
+    if (variant === "secondary") b.classList.add("secondary");
+    if (variant === "ghost") b.classList.add("ghost");
+    b.onclick = action;
+
+    // If it's a "Next" button, add floating class
+    if (label === "Next" || label === "Done" || label === "Continue") {
+        b.classList.add("floating-next-btn");
+    }
+
+    return b;
 }
 
 // Replace renderMealBar to render floating meals outside #app
@@ -93,59 +119,103 @@ function renderMealBar() {
     if (typeof showNextMealNotification === "function") showNextMealNotification();
 }
 
-function button(label, action, variant) {
-    const b = document.createElement("button");
-    b.innerText = label || "Action";
-    b.classList.add("action-btn");
-    if (variant === "secondary") b.classList.add("secondary");
-    if (variant === "ghost") b.classList.add("ghost");
-    b.onclick = action;
-    return b;
-}
-
 // Create persistent restart button (called once at init)
+
 function createRestartButton() {
-    // Check if already exists
-    if (document.getElementById("restart-btn")) return;
-
-    const btn = document.createElement("button");
-    btn.id = "restart-btn";
-    btn.innerText = "🔄 Restart Day";
-    btn.onclick = () => {
-        if (confirm("Are you sure you want to restart? All progress will be lost.")) {
-            // Clear all saved state
-            if (typeof clearSavedState === "function") clearSavedState();
-
-            // Reset all global variables
-            stepIndex = 0;
-            timerRemaining = 0;
-            timerPaused = false;
-            notes = [];
-            currentAffirmationIx = 0;
-            sessions = [];
-            waves = { morning: [], afternoon: [], night: [] };
-            runningQueue = [];
-            runningIndex = -1;
-            blockAccumMinutes = 0;
-            activeSession = null;
-            activeSessionExtra = null;
-            sessionLogs = [];
-            sessionIdCounter = 1;
-            questionsBacklog = {};
-            mealStatus = [];
-
-            // Reset dayMeta
-            dayMeta = {
-                startTs: new Date().toISOString(),
-                userProfile: {},
-                focusHours: 4,
-                customSubjects: [],
-                dice: null
-            };
-
-            // Reload page to start fresh
-            location.reload();
-        }
-    };
-    document.body.appendChild(btn);
+  if (document.getElementById("restart-btn")) return;
+  const btn = document.createElement("button");
+  btn.id = "restart-btn";
+  btn.innerText = "🔄 Restart Day";
+  btn.onclick = () => {
+    if (confirm("Are you sure you want to restart? All progress will be lost.")) {
+      restartDay(true);
+    }
+  };
+  document.body.appendChild(btn);
 }
+
+function centerStage(on = true) {
+    const stage = document.getElementById("stage");
+    if (stage) stage.classList.toggle("center-stage", !!on);
+}
+
+function restartDay(hardReload = true) {
+  try {
+    // 1) Stop timers and clear UI artifacts
+    if (typeof stopTimer === "function") stopTimer();
+    // Remove floating next, mealbar, notifications
+    try {
+      const btn = document.querySelector(".floating-next-btn"); if (btn) btn.remove();
+      const mealbar = document.getElementById("top-mealbar"); if (mealbar) mealbar.remove();
+      const notif = document.getElementById("top-notif-meal"); if (notif) notif.remove();
+    } catch(e) {}
+
+    // 2) Clear saved state (per-day and meals)
+    if (typeof clearSavedState === "function") clearSavedState();
+    // Remove any mealStatus_* keys and any dbr_state_* keys in case of date mismatch
+    try {
+      const toDelete = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k) continue;
+        if (k.startsWith("mealStatus_") || k.startsWith("dbr_state_")) {
+          toDelete.push(k);
+        }
+      }
+      toDelete.forEach(k => localStorage.removeItem(k));
+    } catch (e) {}
+
+    // 3) Reset runtime globals
+    stepIndex = 0;
+    timerRemaining = 0;
+    timerPaused = false;
+    notes = [];
+    currentAffirmationIx = 0;
+    sessions = [];
+    waves = { morning: [], afternoon: [], night: [] };
+    runningQueue = [];
+    runningIndex = -1;
+    blockAccumMinutes = 0;
+    activeSession = null;
+    activeSessionExtra = null;
+    sessionLogs = [];
+    sessionIdCounter = 1;
+    questionsBacklog = {};
+    mealStatus = [];
+    dayMeta = {
+      startTs: new Date().toISOString(),
+      userProfile: {},
+      focusHours: 4,
+      customSubjects: [],
+      dice: null,
+      mood: null
+    };
+
+    // 4) Either hard reload (cleanest) or soft restart (re-render)
+    if (hardReload) {
+      location.reload();
+    } else {
+      // Soft restart: clear UI and go back to the first screen
+      if (typeof clearUI === "function") clearUI();
+      const title = document.getElementById("title");
+      if (title) {
+        const h = new Date().getHours();
+        title.innerHTML = h < 12 ? "Reset – Morning" : (h < 18 ? "Reset – Afternoon" : "Reset – Night");
+      }
+      if (typeof setProgress === "function") setProgress();
+      // Start profile → setup flow
+      if (typeof askProfile === "function") {
+        askProfile(() => {
+          if (typeof showSetup === "function") {
+            showSetup(() => { stepIndex = 0; if (typeof next === "function") next(); });
+          }
+        });
+      }
+    }
+  } catch (e) {
+    // As a fallback, force reload
+    location.reload();
+  }
+}
+
+window.restartDay = restartDay;

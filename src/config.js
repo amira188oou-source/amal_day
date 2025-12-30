@@ -17,24 +17,25 @@ const MOOD_THEMES = {
     },
     calm: {
         label: "🧘 Calm",
-        primary: "#6ba3d9",
-        accent: "#7eb3ff",
-        bg: "#0d1419",
-        card: "#1a232f",
         emoji: "🧘",
+        primary: "#5FA8A3",   // sage-teal (regulation, trust)
+        accent: "#9ADBCF",    // soft aqua highlight
+        bg: "#0E1618",        // deep calm night
+        card: "#182325",      // soft surface, low contrast
         activityBoost: 1.0,
-        description: "Peaceful, reflective, steady pace"
+        description: "Balanced, regulated, steady and present"
     },
     focused: {
         label: "🎯 Focused",
-        primary: "#ff9d4f",
-        accent: "#ffb366",
-        bg: "#1a1010",
-        card: "#2d1f1f",
         emoji: "🎯",
-        activityBoost: 1.3,
-        description: "Deep work mode, minimal distractions"
+        primary: "#F4A261",   // warm amber (attention anchor)
+        accent: "#FFD6A5",    // soft highlight, not loud
+        bg: "#121212",        // near-black = reduced noise
+        card: "#1E1E1E",      // IDE-like surface
+        activityBoost: 1.25,
+        description: "Deep attention, clarity, execution mode"
     },
+
     tired: {
         label: "😴 Tired",
         primary: "#a78bfa",
@@ -46,18 +47,17 @@ const MOOD_THEMES = {
         description: "Low energy, need gentle breaks"
     },
     overwhelmed: {
-        label: "😰 Overwhelmed",
-        primary: "#f87171",
-        accent: "#fca5a5",
-        bg: "#160b0b",
-        card: "#2d1515",
-        emoji: "😰",
-        activityBoost: 0.6,
-        description: "Need to simplify, take it slow"
+        label: "🌧 Overwhelmed",
+        emoji: "🌧",
+        primary: "#C77D8A",   // muted rose (safety, care)
+        accent: "#E6A6B0",    // soft reassurance
+        bg: "#140F12",        // cocoon-like dark
+        card: "#24171C",      // safe surface, not alarming
+        activityBoost: 0.55,
+        description: "High load — simplify, ground, and slow down"
     }
-};
 
-// ...existing MOOD_THEMES and BODY_CONDITIONS...
+};
 
 const MOOD_ACTIVITIES = {
     energetic: [
@@ -66,25 +66,71 @@ const MOOD_ACTIVITIES = {
         { type: "transition", activities: ["Ready for more? Let's go! 🔥", "Energy high — next session coming up!", "Keep that momentum! 💨"] }
     ],
     calm: [
-        { type: "break", duration: 12, activities: ["🧘 Meditation (5 min)", "📖 Read something inspiring", "🍵 Tea break + quiet moment"] },
-        { type: "pause", duration: 6, activities: ["🌬️ Gentle breathing (4-7-8)", "👂 Listen to nature sounds", "✋ Hand massage + shoulder roll"] },
-        { type: "transition", activities: ["Take your time, next session when ready 🧘", "Breathe. You're doing great.", "Peace and focus ahead. 🕯️"] }
-    ],
-    focused: [
-        { type: "break", duration: 6, activities: ["⚡ Quick walk or stair climb", "💧 Water + bathroom break", "📝 Jot down any ideas before continuing"] },
-        { type: "pause", duration: 3, activities: ["👀 20-20-20 rule (20s away)", "🔄 Rotate wrists/neck", "Deep breath, back to it"] },
-        { type: "transition", activities: ["Flow state incoming 🎯", "Ready to deep dive again?", "Next challenge awaits 🚀"] }
-    ],
+        {
+            type: "break",
+            duration: 12,
+            activities: [
+                "🧘 5-minute breathing or meditation",
+                "📖 Read 2–3 calm pages",
+                "🍵 Tea + silence (no phone)"
+            ]
+        },
+        {
+            type: "pause",
+            duration: 6,
+            activities: [
+                "🌬 Slow breathing (4-6)",
+                "🌿 Look at something natural",
+                "✋ Gentle hand & neck release"
+            ]
+        }
+    ], focused: [
+        {
+            type: "break",
+            duration: 6,
+            activities: [
+                "🚶 Short walk or stand",
+                "💧 Water + posture reset",
+                "📝 Write down loose thoughts"
+            ]
+        },
+        {
+            type: "pause",
+            duration: 3,
+            activities: [
+                "👀 20-20-20 eye rule",
+                "🔄 Neck / wrist rotation",
+                "🌬 One deep breath"
+            ]
+        }
+    ]
+    ,
     tired: [
         { type: "break", duration: 20, activities: ["🛏️ Lie down for 5 min", "🥛 Drink water + light snack", "🌬️ Slow breathing + gentle stretching"] },
         { type: "pause", duration: 10, activities: ["👀 Close eyes briefly", "💆 Neck + shoulder release", "Sip water slowly"] },
         { type: "transition", activities: ["Short session next, you can do this 💪", "Gentle pace ahead. Rest when needed.", "Energy building... keep going 🌱"] }
     ],
     overwhelmed: [
-        { type: "break", duration: 15, activities: ["🚶 Walk outside if possible", "🧘 5-4-3-2-1 grounding technique", "💧 Hydrate + sit quietly"] },
-        { type: "pause", duration: 8, activities: ["🫁 Box breathing (4-4-4-4)", "👂 Calming sounds or music", "Hands on face — slow breath"] },
-        { type: "transition", activities: ["Small step next. You've got this 🌱", "One thing at a time. Breathe.", "Simplify. Breathe. Continue at your pace. 🕊️"] }
+        {
+            type: "break",
+            duration: 15,
+            activities: [
+                "🚶 Slow walk (outside if possible)",
+                "🫁 5-4-3-2-1 grounding",
+                "💧 Sit + hydrate quietly"
+            ]
+        },
+        {
+            type: "pause",
+            duration: 8,
+            activities: [
+                "🫁 Box breathing (4-4-4-4)",
+                "🎧 Calming sound or silence",
+                "✍️ Write one worry, stop"
+            ]
+        }
     ]
+
 };
 
 const BODY_CONDITION_ACTIVITIES = {
@@ -153,17 +199,198 @@ const BODY_CONDITIONS = {
     }
 };
 
-// ... rest of config.js stays the same ...
-const affirmationsArabic = [
-    "Ana kafiya b rassi.", "Ma khasnich nkon kamla bach nkon mzyana.",
-    "Kan9der ndir li 9drit lyom.", "Chwiya chwiya rah mzyana.", "Rassi kaystahal l7nan."
-];
-const affirmationsEnglish = [
-    "You are enough as you are.", "Your worth is not based on others.",
-    "You are capable of achieving your goals.", "Progress is progress, no matter how small.",
-    "Be kind to yourself today."
-];
-const energyStops = ["🍎 Kouli fakiha", "🥜 Kouli chwiya nuts", "💧 Chrbi lma", "🌬️ Tanfos 3 dqaye9"];
+// ...existing MOOD_THEMES, BODY_CONDITIONS, MOOD_ACTIVITIES...
+
+// ===============================
+// AFFIRMATIONS (mood-based)
+// ===============================
+const AFFIRMATIONS = {
+    energetic: {
+        arabic: [
+            "Rah nqder! Energy kayswel! 🔥",
+            "Nta capable d'achever kul haja! ⚡",
+            "Momentum rah f'tarafak! Keep going! 💪",
+            "Nta stronger than you think! 🚀"
+        ],
+        english: [
+            "You've got this energy! Use it wisely! 🔥",
+            "Channel this power into your goals! ⚡",
+            "Your momentum is unstoppable! 💪",
+            "You are stronger than yesterday! 🚀"
+        ]
+    },
+    calm: {
+        arabic: [
+            "أنا هادئ، وكل شيء يسير في وقته المناسب.",
+            "أنفاسي ثابتة، وقلبي مطمئن.",
+            "التقدم الهادئ يصنع نتائج عظيمة.",
+            "السلام الداخلي مصدر قوتي."
+        ],
+        english: [
+            "I am calm, and everything unfolds in its right time.",
+            "My breath is steady, my mind is at ease.",
+            "Slow and steady progress creates lasting results.",
+            "My inner peace is my strength."
+        ]
+    }
+    ,
+    focused: {
+        arabic: [
+            "ذهني صافٍ، وتركيزي كامل على هذه المهمة.",
+            "أُنجز شيئًا واحدًا بإتقان.",
+            "كل دقيقة من التركيز تقرّبني من هدفي.",
+            "أستبعد المشتتات، وأُرحّب بالوضوح."
+        ],
+        english: [
+            "My mind is clear, and my focus is on this task.",
+            "I do one thing, and I do it well.",
+            "Each focused minute brings me closer to my goal.",
+            "I release distractions and welcome clarity."
+        ]
+    }
+    ,
+    tired: {
+        arabic: [
+            "Chwiya chwiya. You're doing great. 💤",
+            "Rest is productive. Be kind to yourself. 🌙",
+            "Short wins count. Keep going gently. 🌱",
+            "You deserve rest AND progress. 💚"
+        ],
+        english: [
+            "Small steps still move forward. 💤",
+            "Rest is part of the journey. 🌙",
+            "You don't need perfection, just progress. 🌱",
+            "Be gentle with yourself today. 💚"
+        ]
+    },
+    overwhelmed: {
+        arabic: [
+            "أنا في أمان الآن، ويمكنني أن أتحرك خطوة واحدة فقط.",
+            "هذا الشعور مؤقت، وسيمرّ.",
+            "لا أحتاج إلى حل كل شيء الآن.",
+            "أنفاسي تعيدني إلى الحاضر."
+        ],
+        english: [
+            "I am safe right now, and I only need to take one small step.",
+            "This feeling is temporary, and it will pass.",
+            "I do not need to solve everything right now.",
+            "My breath brings me back to the present moment."
+        ]
+    }
+
+};
+
+// ===============================
+// ENERGY STOPS (mood + body-based)
+// ===============================
+const ENERGY_STOPS = {
+    energetic: [
+        "🍎 Grab a fruit + stay hydrated",
+        "💪 Quick 10 push-ups or squats",
+        "💧 Drink water + electrolyte boost",
+        "🎵 Blast 1 energizing song",
+        "🚶 Power walk 2 minutes"
+    ],
+    calm: [
+        "🍵 Herbal tea + quiet moment",
+        "💧 Sip water slowly + breathe",
+        "📖 Read something inspiring (2 min)",
+        "🧘 Gentle stretch + meditation",
+        "🪴 Look at a plant or nature view"
+    ],
+    focused: [
+        "💧 Quick water break",
+        "🫐 Handful of berries (quick energy)",
+        "👀 20-20-20 rule (eyes rest)",
+        "📝 Jot down 1 idea before returning",
+        "🍋 Lemon water for clarity"
+    ],
+    tired: [
+        "🛏️ Lie down 2 minutes (no phone)",
+        "🥛 Warm milk or light snack",
+        "💧 Hydrate well + slow breathing",
+        "🧘 Gentle neck/shoulder release",
+        "👁️ Close eyes 3 minutes"
+    ],
+    overwhelmed: [
+        "🌬️ Box breathing (4-4-4-4) x3",
+        "🚶 Walk outside if possible",
+        "💧 Hydrate + sit quietly",
+        "🧘 Ground yourself (5-4-3-2-1 sense check)",
+        "🕊️ Affirmation: 'I am safe. I can handle this.'"
+    ]
+};
+
+// ===============================
+// BODY CONDITION-SPECIFIC STOPS
+// ===============================
+const BODY_STOPS = {
+    healthy: [
+        "🚶 Quick walk",
+        "💧 Hydrate",
+        "🧘 Stretch",
+        "🍎 Fruit or snack"
+    ],
+    tiredBody: [
+        "🛏️ Sit or lie down 3 min",
+        "💧 Hydrate generously",
+        "🧘 Gentle stretch only",
+        "🥛 Light snack for energy"
+    ],
+    headache: [
+        "👀 Dark room 2 min",
+        "💧 Hydrate slowly + carefully",
+        "🧘 Neck release gently",
+        "🌬️ Calm, slow breathing"
+    ],
+    coldFlu: [
+        "🛏️ Rest 5 min minimum",
+        "🍵 Warm tea or broth",
+        "💧 Hydrate well",
+        "🤧 Take care of yourself"
+    ],
+    soreMuscles: [
+        "🧘 Gentle stretch only",
+        "🌡️ Warm compress if possible",
+        "💆 Light self-massage",
+        "💧 Hydrate well"
+    ],
+    injured: [
+        "🛏️ Complete rest",
+        "💧 Hydrate",
+        "🧘 Breathing exercises only",
+        "🕯️ Mental rest time"
+    ]
+};
+
+// Helper function to pick affirmation by mood
+function getAffirmationByMood(lang = "english") {
+    const mood = dayMeta.mood || "calm";
+    const affirmations = AFFIRMATIONS[mood]?.[lang] || AFFIRMATIONS.calm[lang];
+    return affirmations[Math.floor(Math.random() * affirmations.length)];
+}
+
+// Helper function to pick energy stop by mood + body
+function getEnergyStopByMoodAndBody() {
+    const mood = dayMeta.mood || "calm";
+    const body = dayMeta.bodyCondition || "healthy";
+
+    // Prioritize body condition if unhealthy, otherwise use mood
+    if (body !== "healthy") {
+        const bodyStops = BODY_STOPS[body] || BODY_STOPS.healthy;
+        return bodyStops[Math.floor(Math.random() * bodyStops.length)];
+    }
+
+    const moodStops = ENERGY_STOPS[mood] || ENERGY_STOPS.calm;
+    return moodStops[Math.floor(Math.random() * moodStops.length)];
+}
+
+// Keep old references for backward compatibility
+const affirmationsArabic = AFFIRMATIONS.calm.arabic;
+const affirmationsEnglish = AFFIRMATIONS.calm.english;
+const energyStops = ENERGY_STOPS.calm;
+
+// ... rest of config.js...
 const baseFocusSubjects = [
     {
         name: "🔵 Job Search", checklist: [
@@ -257,3 +484,89 @@ let appConfig = {
     },
     baseSubjectsEditable: JSON.parse(JSON.stringify(baseFocusSubjects))
 };
+
+const ADAPTIVE_ACTIVITIES = {
+    grounding: {
+        id: "grounding",
+        cooldown: 120, // minutes
+        byMood: {
+            energetic: "🧍 Stand still + breathe deeply (1 min)",
+            calm: "🧘‍♀️ Sit silently, notice breath (2 min)",
+            focused: "👁️ Close eyes, count 5 breaths",
+            tired: "🛏️ Sit or lie down, soften body",
+            overwhelmed: "🫁 5-4-3-2-1 grounding exercise"
+        }
+    },
+
+    hydration: {
+        id: "hydration",
+        cooldown: 90,
+        byMood: {
+            energetic: "💧 Drink water standing up",
+            calm: "🍵 Sip water slowly",
+            focused: "💧 Quick hydration break",
+            tired: "🥛 Warm drink or water",
+            overwhelmed: "💧 Drink water + breathe"
+        }
+    },
+
+    morningAudio: {
+        id: "morningAudio",
+        cooldown: 240,
+        byMood: {
+            energetic: "🎧 Uplifting nasheed or instrumental",
+            calm: "🎧 Nature sounds or Quran recitation",
+            focused: "🎧 Low-volume ambient focus audio",
+            tired: "🎧 Soft calming audio (no lyrics)",
+            overwhelmed: "🎧 Grounding audio / brown noise"
+        }
+    },
+
+    creative: {
+        id: "creative",
+        cooldown: 360,
+        byMood: {
+            energetic: "✏️ Sketch anything for 3 minutes",
+            calm: "🎨 Draw something peaceful",
+            focused: "📝 Write 5 lines about one idea",
+            tired: "🖍️ Doodle freely (no goal)",
+            overwhelmed: "📝 Write what’s heavy, then stop"
+        }
+    },
+
+    learningLight: {
+        id: "learningLight",
+        cooldown: 360,
+        byMood: {
+            energetic: "🎥 Watch 5 min of a documentary",
+            calm: "📖 Read 2 pages of something meaningful",
+            focused: "📘 Learn one small concept",
+            tired: "🎧 Listen instead of reading",
+            overwhelmed: "📖 Read a single paragraph only"
+        }
+    }
+};
+
+let activityHistory =
+    JSON.parse(localStorage.getItem("activityHistory") || "{}");
+
+function markActivityDone(id) {
+    activityHistory[id] = Date.now();
+    localStorage.setItem("activityHistory", JSON.stringify(activityHistory));
+}
+
+function canDoActivity(id) {
+    const act = Object.values(ADAPTIVE_ACTIVITIES).find(a => a.id === id);
+    if (!act) return true;
+    const last = activityHistory[id];
+    if (!last) return true;
+    return (Date.now() - last) > act.cooldown * 60000;
+}
+
+function getAdaptiveActivity(type) {
+    const mood = dayMeta.mood || "calm";
+    const act = ADAPTIVE_ACTIVITIES[type];
+    if (!act || !canDoActivity(act.id)) return null;
+    return act.byMood[mood] || act.byMood.calm;
+}
+

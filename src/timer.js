@@ -1,4 +1,3 @@
-
 function stopTimer() {
     if (timer) clearInterval(timer);
     timer = null;
@@ -20,28 +19,42 @@ function startTimer(minutes, onEnd) {
     timerEl.classList.add("active");
     timerEl.style.display = "flex";
 
-    // create timer-controls container (do not remove other buttons)
-    // create timer-controls container (do not remove other buttons)
+    // Create timer-controls container with icon buttons (CENTERED BELOW TIMER)
     let controls = document.getElementById("timer-controls");
     if (controls) controls.remove();
     controls = document.createElement("div");
     controls.id = "timer-controls";
-    controls.style.cssText = "display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap;";
+    controls.style.cssText = "display:flex;gap:12px;margin-top:16px;justify-content:center;align-items:center;width:100%;";
 
-    const pauseBtn = button("Pause", () => {
+    // Pause/Resume button (icon only)
+    const pauseBtn = document.createElement("button");
+    pauseBtn.className = "timer-icon-btn";
+    pauseBtn.innerHTML = "⏸️";
+    pauseBtn.title = "Pause";
+    pauseBtn.onclick = () => {
         timerPaused = !timerPaused;
-        pauseBtn.innerText = timerPaused ? "Resume" : "Pause";
+        pauseBtn.innerHTML = timerPaused ? "▶️" : "⏸️";
+        pauseBtn.title = timerPaused ? "Resume" : "Pause";
         if (typeof saveAppState === "function") saveAppState();
-    });
-    const skipBtn = button("Skip", () => {
+    };
+
+    // Skip button (icon only)
+    const skipBtn = document.createElement("button");
+    skipBtn.className = "timer-icon-btn";
+    skipBtn.innerHTML = "⏭️";
+    skipBtn.title = "Skip";
+    skipBtn.onclick = () => {
         stopTimer();
-        if (typeof onEnd === "function") onEnd("skipped");
+        if (typeof onEnd === "function") onEnd();
         if (typeof saveAppState === "function") saveAppState();
-    }, "secondary");
+    };
+
     controls.appendChild(pauseBtn);
     controls.appendChild(skipBtn);
-    const buttonsWrapper = document.getElementById("buttons");
-    if (buttonsWrapper) buttonsWrapper.appendChild(controls);
+    
+    // Append directly to app, not to buttons wrapper
+    const app = document.getElementById("app");
+    if (app) app.appendChild(controls);
 
     let preEndPlayed = false;
 
@@ -98,63 +111,26 @@ function startTimer(minutes, onEnd) {
 
         // Update progress ring only when totalSeconds>0
         if (totalSeconds > 0) {
-            const progress = Math.max(0, Math.min(1, (totalSeconds - Math.max(0, timerRemaining)) / totalSeconds));
-            ring.style.strokeDashoffset = circumference * (1 - progress);
+            const offset = circumference * (timerRemaining / totalSeconds);
+            ring.style.strokeDashoffset = Math.max(0, offset);
         }
 
         // Pre-end beep at 2 min
         if (timerRemaining === 120 && !preEndPlayed && appConfig.sound.notifications) {
-            playNotification("preEnd");
+            playNotification("pre-end");
             preEndPlayed = true;
         }
 
         if (timerRemaining < 0) {
-            // finished normally
             stopTimer();
-            timerEl.classList.add("timer-done");
-            if (appConfig.sound.notifications) playAlarm();
-            timerEl.style.animation = "pulse 0.5s ease-out";
-            setTimeout(() => timerEl.style.animation = "", 500);
-            // auto-hide visual done state
-            setTimeout(() => {
-                const el = document.getElementById("timer");
-                if (el) el.style.display = "none";
-            }, 2000);
-            if (typeof onEnd === "function") onEnd("completed");
+            if (appConfig.sound.notifications) playNotification("end");
+            if (typeof onEnd === "function") onEnd();
         }
     };
 
     tick();
     timer = setInterval(tick, 1000);
     if (typeof saveAppState === "function") saveAppState();
-}
-
-function playAlarm() {
-    try {
-        const ctx = getAudioCtx();
-        const now = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 1);
-
-        // Triple beep pattern
-        osc.frequency.setValueAtTime(800, now);
-        osc.frequency.setValueAtTime(600, now + 0.15);
-        osc.frequency.setValueAtTime(800, now + 0.3);
-
-        osc.start(now);
-        osc.stop(now + 1);
-    } catch (e) {
-        console.log("Alarm sound failed:", e);
-    }
-}
-
-function notifyBeep(type) {
-    playNotification(type);
 }
 
 function resumeTimer(onEnd) {
@@ -204,27 +180,38 @@ function resumeTimer(onEnd) {
     textDiv.className = "timer-text";
     timerEl.appendChild(textDiv);
 
-    // Recreate controls
+    // Recreate icon controls (CENTERED)
     let controls = document.getElementById("timer-controls");
     if (controls) controls.remove();
     controls = document.createElement("div");
     controls.id = "timer-controls";
-    controls.style.cssText = "display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap;";
+    controls.style.cssText = "display:flex;gap:12px;margin-top:16px;justify-content:center;align-items:center;width:100%;";
     
-    const pauseBtn = button("Pause", () => {
+    const pauseBtn = document.createElement("button");
+    pauseBtn.className = "timer-icon-btn";
+    pauseBtn.innerHTML = "⏸️";
+    pauseBtn.title = "Pause";
+    pauseBtn.onclick = () => {
         timerPaused = !timerPaused;
-        pauseBtn.innerText = timerPaused ? "Resume" : "Pause";
+        pauseBtn.innerHTML = timerPaused ? "▶️" : "⏸️";
+        pauseBtn.title = timerPaused ? "Resume" : "Pause";
         if (typeof saveAppState === "function") saveAppState();
-    });
-    const skipBtn = button("Skip", () => {
+    };
+
+    const skipBtn = document.createElement("button");
+    skipBtn.className = "timer-icon-btn";
+    skipBtn.innerHTML = "⏭️";
+    skipBtn.title = "Skip";
+    skipBtn.onclick = () => {
         stopTimer();
-        if (typeof onEnd === "function") onEnd("skipped");
+        if (typeof onEnd === "function") onEnd();
         if (typeof saveAppState === "function") saveAppState();
-    }, "secondary");
+    };
+
     controls.appendChild(pauseBtn);
     controls.appendChild(skipBtn);
-    const buttonsWrapper = document.getElementById("buttons");
-    if (buttonsWrapper) buttonsWrapper.appendChild(controls);
+    const app = document.getElementById("app");
+    if (app) app.appendChild(controls);
 
     let preEndPlayed = false;
     const totalSeconds = timerRemaining;
@@ -239,30 +226,51 @@ function resumeTimer(onEnd) {
         textEl.innerText = formatMinSec(timerRemaining >= 0 ? timerRemaining : 0);
 
         if (totalSeconds > 0) {
-            const progress = Math.max(0, Math.min(1, (totalSeconds - Math.max(0, timerRemaining)) / totalSeconds));
-            ringEl.style.strokeDashoffset = circumference * (1 - progress);
+            const offset = circumference * (timerRemaining / totalSeconds);
+            ringEl.style.strokeDashoffset = Math.max(0, offset);
         }
 
         if (timerRemaining === 120 && !preEndPlayed && appConfig.sound.notifications) {
-            playNotification("preEnd");
+            playNotification("pre-end");
             preEndPlayed = true;
         }
 
         if (timerRemaining < 0) {
             stopTimer();
-            timerEl.classList.add("timer-done");
-            if (appConfig.sound.notifications) playAlarm();
-            timerEl.style.animation = "pulse 0.5s ease-out";
-            setTimeout(() => timerEl.style.animation = "", 500);
-            setTimeout(() => {
-                const el = document.getElementById("timer");
-                if (el) el.style.display = "none";
-            }, 2000);
-            if (typeof onEnd === "function") onEnd("completed");
+            if (appConfig.sound.notifications) playNotification("end");
+            if (typeof onEnd === "function") onEnd();
         }
     };
 
     tick();
     timer = setInterval(tick, 1000);
     if (typeof saveAppState === "function") saveAppState();
+}
+
+function playAlarm() {
+    try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 1);
+
+        // Triple beep pattern
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.setValueAtTime(600, now + 0.15);
+        osc.frequency.setValueAtTime(800, now + 0.3);
+
+        osc.start(now);
+        osc.stop(now + 1);
+    } catch (e) {
+        console.log("Alarm sound failed:", e);
+    }
+}
+
+function notifyBeep(type) {
+    playNotification(type);
 }

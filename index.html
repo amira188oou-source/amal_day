@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar">
+
 <head>
     <meta charset="UTF-8">
     <title>🌑 Reset – Day 1</title>
@@ -9,36 +10,69 @@
 
 <body>
     <div id="app">
-        <header>
-            <h1 id="title">Reset – Day 1</h1>
-            <div id="progress">Step 1 / 26</div>
-        </header>
-        <div id="text"></div>
-        <div id="subtext"></div>
-        <div id="timer"></div>
-        <div id="dice"></div>
-        <div id="result"></div>
-        <div id="checklist"></div>
-        <div class="buttons" id="buttons"></div>
+        <div class="app-grid">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="panel">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                    <strong style="font-size:16px;">Today</strong>
+                    <span id="progress">Step 1 / 26</span>
+                </div>
+                <div id="sidebar-meals" class="list-compact" style="margin-top:8px;color:var(--muted);"></div>
+                <div class="field" style="margin-top:12px;">
+                    <label>Quick actions</label>
+                    <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;">
+                       <button class="ghost action-btn" onclick="restartDay(true)">Restart</button>
+                        <button class="secondary action-btn"
+                            onclick="if(window.saveAppState) saveAppState()">Save</button>
+                    </div>
+                </div>
+            </aside>
+
+            <main id="main" class="panel">
+                <header>
+                    <h1 id="title">Reset – Day 1</h1>
+                    <div id="progress"></div>
+                </header>
+
+                <!-- New wrapper for centerable content -->
+                <div id="stage">
+                    <div id="text"></div>
+                    <div id="subtext"></div>
+                    <div id="result"></div>
+                    <div id="checklist"></div>
+                    <div class="buttons" id="buttons"></div>
+                </div>
+                <!-- floating next/done/continue button appears here via JS (class .floating-next-btn) -->
+            </main>
+
+            <!-- Right rail: sticky timer -->
+            <aside id="rail">
+                <div id="timer" class="panel" style="padding:0;"></div>
+                <div id="timer-controls"></div>
+            </aside>
+        </div>
     </div>
 
-    <script src="src/config.js"></script>      <!-- Load config FIRST -->
+    <!-- scripts unchanged (load order preserved) -->
+    <script src="src/config.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="src/state.js"></script>
     <script src="src/utils.js"></script>
     <script src="src/ui.js"></script>
+    <script src="src/steps.js"></script>
+    <script src="src/stepsRestore.js"></script>
     <script src="src/youtube.js"></script>
     <script src="src/audio.js"></script>
     <script src="src/timer.js"></script>
     <script src="src/setup.js"></script>
-    <script src="src/planning.js"></script>    <!-- These can now use MOOD_THEMES -->
+    <script src="src/planning.js"></script>
     <script src="src/affirmations.js"></script>
     <script src="src/dice.js"></script>
     <script src="src/sessions.js"></script>
     <script src="src/reflection.js"></script>
     <script src="src/journal.js"></script>
     <script src="src/report.js"></script>
-    <script src="src/main.js"></script>         <!-- These can now use MOOD_THEMES -->
+    <script src="src/main.js"></script>
 </body>
 
 </html>
