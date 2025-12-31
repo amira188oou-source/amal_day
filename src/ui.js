@@ -234,4 +234,19 @@ function createBoostEnergyButton() {
 
   document.body.appendChild(btn);
 }
+
+function boostEnergy() {
+  // Save state so user can resume later
+  if (typeof saveAppState === "function") {
+    saveAppState();
+  }
+
+  // Optional: mark where we came from
+  localStorage.setItem("returnToApp", "1");
+
+  // Go to energy flow
+  window.location.href = "src/energy.html";
+}
+
+window.boostEnergy = boostEnergy;
 window.restartDay = restartDay;
