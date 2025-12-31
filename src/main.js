@@ -72,7 +72,7 @@ function next() {
 
     // **RESTORE MOOD THEME BEFORE RENDERING**
     if (dayMeta.mood && typeof applyMoodTheme === "function") {
-        applyMoodTheme(dayMeta.mood);
+       // applyMoodTheme(dayMeta.mood);
     }
 
     // **RESTORE BODY CONDITION BEFORE RENDERING**

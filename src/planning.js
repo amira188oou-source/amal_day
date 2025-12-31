@@ -159,7 +159,7 @@ function showMoodSelector(onDone) {
         card.onmouseleave = () => card.style.transform = "scale(1)";
         card.onclick = () => {
             dayMeta.mood = key;
-            applyMoodTheme(key);
+           // applyMoodTheme(key);
             addNote({ type: "mood", title: "Mood selected", content: mood.label });
             if (typeof saveAppState === "function") saveAppState();
             showPlanningForm(onDone);
@@ -193,6 +193,12 @@ function applyMoodTheme(moodKey) {
     r.style.setProperty("--accent-10", `rgba(${ar}, ${ag}, ${ab}, 0.10)`);
     r.style.setProperty("--accent-20", `rgba(${ar}, ${ag}, ${ab}, 0.20)`);
 
+    if (t.text)  r.style.setProperty("--text", t.text);
+    if (t.muted) r.style.setProperty("--muted", t.muted);
+    if (t.success) r.style.setProperty("--success", t.success);
+    if (t.danger) r.style.setProperty("--danger", t.danger);
+    if (t.warn) r.style.setProperty("--warn", t.warn);
+
     localStorage.setItem("userMood", moodKey);
 }
 
@@ -210,7 +216,7 @@ function loadMoodTheme() {
     const saved = localStorage.getItem("userMood");
     if (saved && MOOD_THEMES[saved]) {
         dayMeta.mood = saved;
-        applyMoodTheme(saved);
+        //applyMoodTheme(saved);
     }
 }
 

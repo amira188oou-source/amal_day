@@ -88,9 +88,9 @@
   --success: #2aa772;
   --success-dark: #1f7f56;
   --success-shadow: 0 8px 20px rgba(42,167,114,.30);
-  --danger: #ff5c5c;
-  --danger-dark: #d74646;
-  --danger-border: #c23e3e;
+  --danger: #5cc3ff;
+  --danger-dark: rgb(47, 114, 142);
+  --danger-border: rgb(88, 151, 188);
   --danger-shadow: 0 6px 16px rgba(255,92,92,.25);
 }
 

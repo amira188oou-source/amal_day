@@ -65,7 +65,7 @@ function askProfile(onDone) {
     dayMeta.mood = moodVal;
     dayMeta.bodyCondition = bodyVal;
 
-    if (typeof applyMoodTheme === "function") applyMoodTheme(moodVal);
+    //if (typeof applyMoodTheme === "function") applyMoodTheme(moodVal);
     if (typeof applyBodyCondition === "function") applyBodyCondition(bodyVal);
 
     addNote({

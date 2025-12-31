@@ -18,10 +18,24 @@ const MOOD_THEMES = {
     calm: {
         label: "🧘 Calm",
         emoji: "🧘",
-        primary: "#5FA8A3",   // sage-teal (regulation, trust)
-        accent: "#9ADBCF",    // soft aqua highlight
-        bg: "#0E1618",        // deep calm night
-        card: "#182325",      // soft surface, low contrast
+
+        /* Brand (very low saturation) */
+        primary: "#8DA7A8",   // muted sage-teal
+        accent: "#E3BFA7",   // soft peach (less pink)
+
+        /* Surfaces */
+        bg: "#F2EEEC",      // warm off-white (KEY FIX)
+        card: "#E6E1DE",      // subtle elevation, not teal
+
+        /* Text */
+        text: "#3F3A36",     // warm charcoal (not black)
+        muted: "#7A736E",
+
+        /* Semantics (CALM STYLE) */
+        success: "#8FB5A3",   // desaturated green
+        warn: "#D6B58C",   // sand / clay
+        danger: "#E6C6B8",   // VERY light peach (background only)
+
         activityBoost: 1.0,
         description: "Balanced, regulated, steady and present"
     },

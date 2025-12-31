@@ -58,7 +58,7 @@ function restoreLunch() {
 
 function restoreWriting() {
     render({
-        text: "✍️ Writing: reflect on people who look down on themselves",
+        text: "✍️ Writing",
         subtext: `<span class="pill">25–50 minutes</span>`, center: true
     });
     startOrResume(30, next);
