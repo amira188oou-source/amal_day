@@ -16,7 +16,7 @@ function showPlanningForm(onDone) {
     subEl.innerHTML = `
         Check schedule, calculate time, reserve rest, choose focus sessions
         <br>
-        <span class="note">
+        <span class="note highlight">
             Activity duration adjusted for your mood (${Math.round(moodBoost * 100)}%)
         </span>
     `;
@@ -81,11 +81,22 @@ function showPlanningForm(onDone) {
     if (buttons) {
         buttons.appendChild(
             button("Continue", () => {
+                const commit = (document.getElementById("plan-commit")?.value || "").trim();
+                const rest = (document.getElementById("plan-rest")?.value || "").trim();
+                const outcomes = (document.getElementById("plan-outcomes")?.value || "").trim();
+
+                dayMeta.planning = {
+                    commitments: commit,
+                    restPlan: rest,
+                    topOutcomes: outcomes
+                };
+
                 addNote({
                     type: "planning",
                     title: "Planning completed",
-                    content: "Ready for focus sessions"
+                    content: { commitments: commit, restPlan: rest, topOutcomes: outcomes }
                 });
+
                 if (typeof saveAppState === "function") saveAppState();
                 onDone && onDone();
             })
@@ -159,7 +170,7 @@ function showMoodSelector(onDone) {
         card.onmouseleave = () => card.style.transform = "scale(1)";
         card.onclick = () => {
             dayMeta.mood = key;
-           // applyMoodTheme(key);
+            // applyMoodTheme(key);
             addNote({ type: "mood", title: "Mood selected", content: mood.label });
             if (typeof saveAppState === "function") saveAppState();
             showPlanningForm(onDone);
@@ -193,7 +204,7 @@ function applyMoodTheme(moodKey) {
     r.style.setProperty("--accent-10", `rgba(${ar}, ${ag}, ${ab}, 0.10)`);
     r.style.setProperty("--accent-20", `rgba(${ar}, ${ag}, ${ab}, 0.20)`);
 
-    if (t.text)  r.style.setProperty("--text", t.text);
+    if (t.text) r.style.setProperty("--text", t.text);
     if (t.muted) r.style.setProperty("--muted", t.muted);
     if (t.success) r.style.setProperty("--success", t.success);
     if (t.danger) r.style.setProperty("--danger", t.danger);

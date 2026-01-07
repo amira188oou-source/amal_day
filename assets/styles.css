@@ -7,9 +7,10 @@
   --surface-3: #eaeaf0;
   --text: #2b2d42;
   --muted: #7d7f91;
-  --primary: #F8C8D0;
+  --primary: #e8b3bc;
   --accent: rgb(202 229 224 / var(--tw-bg-opacity, 1));
   --warn: #B5DAD0;
+  --ink: #3a3a3a;
 
   /* Derived tints */
   --primary-05: rgba(90, 140, 255, 0.05);
@@ -657,10 +658,195 @@ html, body {
 }
 
 /* Headings bold */
-h1,h2,h3,h4,h5,h6, input, textarea, select, button{
+h1,h2,h3,h4,h5,h6, button{
   font-weight: 600;
 }
 
 button.secondary { background: var(--btn-secondary-bg); }
 button.secondary:hover { background: var(--btn-secondary-bg-hover); }
 
+
+input,
+textarea,
+select,
+button {
+  font-family: var(--font-ui);
+}
+
+html {
+  font-size: 20px; /* was effectively ~16px */
+}
+
+textarea, input{
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+body {
+  font-weight: 500;
+}
+
+#text {
+  font-size: 1.5rem;
+  line-height: 1.7;
+}
+
+#subtext {
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.015),
+      rgba(0,0,0,0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,0,0,0.01),
+      rgba(0,0,0,0.01) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+.panel {
+  border-radius: 18px 16px 20px 14px;
+  border: 2px solid rgba(0,0,0,0.08);
+}
+
+input,
+textarea,
+select {
+  border-radius: 14px 12px 16px 10px;
+  border: 2px solid rgba(0,0,0,0.12);
+}
+
+.panel {
+  box-shadow:
+    2px 3px 0 rgba(0,0,0,0.06),
+    6px 10px 20px rgba(0,0,0,0.08);
+}
+
+button,
+.action-btn {
+  box-shadow:
+    1px 2px 0 rgba(0,0,0,0.12),
+    0 6px 14px rgba(0,0,0,0.15);
+}
+
+h1, h2, h3 {
+  position: relative;
+}
+
+h1::after,
+h2::after,
+h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 3 Q 30 6 60 3 T 118 3' fill='none' stroke='%23f8c8d0' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
+    repeat-x;
+  opacity: 0.8;
+}
+
+
+.panel:nth-child(odd) {
+  transform: rotate(-0.3deg);
+}
+.panel:nth-child(even) {
+  transform: rotate(0.25deg);
+}
+
+button:hover {
+  transform: translateY(-2px) rotate(-0.5deg);
+}
+
+.checklist-item::before {
+  content: "✎";
+  font-size: 1.2rem;
+  opacity: 0.3;
+  margin-right: 6px;
+}
+
+.checklist-item.done {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  text-decoration-color: rgba(0,0,0,0.4);
+}
+
+.panel,
+input,
+textarea {
+  border-color: rgba(58,58,58,0.15);
+}
+
+.section-blob {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(248,200,208,0.55), transparent 70%);
+  z-index: 0;
+  filter: blur(2px);
+}
+
+.highlight {
+  position: relative;
+  display: inline-block;
+  z-index: 0;
+}
+
+.highlight::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: 0.1em;
+  height: 0.9em;
+  background: rgba(248,200,208,0.6);
+  z-index: -1;
+  transform: rotate(-1deg);
+  border-radius: 6px;
+}
+
+.doodle {
+  position: absolute;
+  font-size: 24px;
+  opacity: 0.35;
+  transform: rotate(-10deg);
+}
+
+.sticky {
+  background: #fff6c7;
+  border-radius: 12px 14px 10px 16px;
+  box-shadow:
+    2px 3px 0 rgba(0,0,0,0.15),
+    0 10px 18px rgba(0,0,0,0.12);
+  transform: rotate(-0.6deg);
+}
+
+.tape {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  width: 80px;
+  height: 24px;
+  background: rgba(248,200,208,0.5);
+  transform: rotate(-3deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}

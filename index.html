@@ -7,11 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="assets/styles.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
 </head>
 
 <body>
+
+
     <div id="app">
         <div class="app-grid">
             <!-- Sidebar -->
@@ -21,10 +23,9 @@
                     <span id="progress">Step 1 / 26</span>
                 </div>
                 <div id="sidebar-meals" class="list-compact" style="margin-top:8px;color:var(--muted);"></div>
-                <div class="field" style="margin-top:12px;">
-                    <label>Quick actions</label>
+                <div class="field tape" style="margin-top:12px;">
                     <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;">
-                       <button class="ghost action-btn" onclick="restartDay(true)">Restart</button>
+                        <button class="ghost action-btn" onclick="restartDay(true)">Restart</button>
                         <button class="secondary action-btn"
                             onclick="if(window.saveAppState) saveAppState()">Save</button>
                         <button class="action-btn" onclick="boostEnergy()">⚡ Boost Energy</button>
@@ -51,7 +52,9 @@
 
             <!-- Right rail: sticky timer -->
             <aside id="rail">
-                <div id="timer" class="panel" style="padding:0;"></div>
+                <div id="timer" class="panel" style="padding:0;">
+                    <div class="section-blob" style="top:-40px; left:-30px"></div>
+                </div>
                 <div id="timer-controls"></div>
             </aside>
         </div>
