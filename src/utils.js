@@ -229,7 +229,7 @@ function showNextMealNotification() {
         el = document.createElement("div");
         el.id = "top-notif-meal";
         el.className = "top-notif";
-        el.innerHTML = `<div class="content"></div><button class="close" aria-label="close">✕</button>`;
+        el.innerHTML = `<div class="content"></div><button class="close ghost" aria-label="close">✕</button>`;
         document.body.appendChild(el);
         el.querySelector(".close").onclick = () => el.remove();
     }
