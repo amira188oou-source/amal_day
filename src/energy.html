@@ -82,15 +82,31 @@ header {
 }
 
 #next {
-  display: none;
-  margin-top: 20px;
+  background: var(--primary);
+  display: none
+}
+#exit {
+  
+  background: var(--secondary);
+  display: none
+}
+.nav-btn {
+  flex: 1;
   padding: 14px;
   border-radius: 14px;
+  font-size: 16px;
+  cursor: pointer;
   background: var(--secondary);
   color: white;
   border: none;
-  font-size: 16px;
 }
+
+.action-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
 </style>
 </head>
 
@@ -111,10 +127,16 @@ header {
     <button data-level="veryLow">😴 Very Low</button>
     <button data-level="low">😕 Low</button>
     <button data-level="good">🙂 Good</button>
-    <button data-level="veryGood">🔥 Very Good</button>
+    <button data-level="veryGood">🔥Good but need to refresh</button>
   </div>
 
-  <button id="next">Next</button>
+  <div class="action-row">
+<button id="exit" class="nav-btn">Now i am good</button>
+<button id="next" class="nav-btn">Next</button>
+
+</div>
+
+
 </div>
 
 <script src="energy.js"></script>

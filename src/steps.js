@@ -22,7 +22,7 @@ function stepGrounding() {
 
 // Case 2: Silence
 function stepSilence() {
-    const act = getAdaptiveActivity("silence") || "🧘‍♀️ Sit silently (2 min)";
+    const act = getAdaptiveActivity("silence") || "🧘‍♀️ Do yoga  (2 min)";//Sit silently
     render({
         text: act,
         subtext: `<span class="pill">2 minutes</span>`,

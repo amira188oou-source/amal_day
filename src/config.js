@@ -235,10 +235,10 @@ const AFFIRMATIONS = {
     },
     calm: {
         arabic: [
-            "أنا هادئ، وكل شيء يسير في وقته المناسب.",
-            "أنفاسي ثابتة، وقلبي مطمئن.",
-            "التقدم الهادئ يصنع نتائج عظيمة.",
-            "السلام الداخلي مصدر قوتي."
+            "أنا هادئ، وكل شيء يسير في وقته المناسب",
+            "أنفاسي ثابتة، وقلبي مطمئن",
+            "التقدم الهادئ يصنع نتائج عظيمة",
+            "السلام الداخلي مصدر قوتي"
         ],
         english: [
             "I am calm, and everything unfolds in its right time.",
@@ -250,10 +250,10 @@ const AFFIRMATIONS = {
     ,
     focused: {
         arabic: [
-            "ذهني صافٍ، وتركيزي كامل على هذه المهمة.",
-            "أُنجز شيئًا واحدًا بإتقان.",
-            "كل دقيقة من التركيز تقرّبني من هدفي.",
-            "أستبعد المشتتات، وأُرحّب بالوضوح."
+            "ذهني صافٍ، وتركيزي كامل على هذه المهمة",
+            "أُنجز شيئًا واحدًا بإتقان",
+            "كل دقيقة من التركيز تقرّبني من هدفي",
+            "أستبعد المشتتات، وأُرحّب بالوضوح"
         ],
         english: [
             "My mind is clear, and my focus is on this task.",
@@ -279,10 +279,10 @@ const AFFIRMATIONS = {
     },
     overwhelmed: {
         arabic: [
-            "أنا في أمان الآن، ويمكنني أن أتحرك خطوة واحدة فقط.",
-            "هذا الشعور مؤقت، وسيمرّ.",
-            "لا أحتاج إلى حل كل شيء الآن.",
-            "أنفاسي تعيدني إلى الحاضر."
+            "أنا في أمان الآن، ويمكنني أن أتحرك خطوة واحدة فقط",
+            "هذا الشعور مؤقت، وسيمرّ",
+            "لا أحتاج إلى حل كل شيء الآن",
+            "أنفاسي تعيدني إلى الحاضر"
         ],
         english: [
             "I am safe right now, and I only need to take one small step.",
@@ -416,11 +416,11 @@ const baseFocusSubjects = [
     },
     {
         name: "🟣 Skill Improvement", checklist: [
-            "Relational dbs vs non-relational dbs",
-            "Start a course for a relational db like Postgres or MySql",
-            "install it in your local and practice basic queries",
-            "Start learning about indexes and optimizations",
-            "Document what you learned and share it as mini blog in the discord channel"
+            "Identify what you already cover vs what’s missing.",
+            "Search LinkedIn job postings related to the technology.",
+            "Identify 1–2 key skills to learn.",
+            "Compare your current expertise with market expectations.",
+            "Document what you learned."
         ]
     },
     {
@@ -430,29 +430,11 @@ const baseFocusSubjects = [
         ]
     }
 ];
-const knowledgeQuestions = [
-    "Why do databases use indexes and how do they speed up queries?",
-    "What’s the difference between synchronous and asynchronous programming?",
-    "Explain normalization vs denormalization with examples.",
-    "What is a RESTful API and how does it differ from RPC?",
-    "What does Big O notation tell you about an algorithm?",
-    "What’s the difference between a JOIN and a UNION in SQL?",
-    "What is a cache? Give 2 real-world examples in software.",
-    "What is the difference between structured, semi-structured, and unstructured data?",
-    "How do you handle missing values in a dataset?",
-    "What is the difference between a primary key and a foreign key in a database?",
-    "What is data normalization, and why is it important?",
-    "How would you detect outliers in a dataset?",
-    "What is the difference between OLAP and OLTP?",
-    "How would you choose KPIs for a sales dashboard?",
-    "What is a star schema, and why is it used in BI?",
-    "How can data visualization improve decision-making?",
-    "Explain the difference between a bar chart, line chart, and heatmap — when to use each."
-];
+
 const curiosityPrompts = [
-    "What would happen if humans could photosynthesize like plants?",
-    "Why do some animals see colors differently than humans?",
-    "Pick a random tech acronym you saw today. What does it stand for and why does it matter?"
+    "What would happen if humans needed only 4 hours of sleep instead of 8?",
+    "How would cities change if cars never existed?",
+    "How do animals “talk” to each other?",
 ];
 const reflectionQuestions = [
     "How did you feel (energy, focus, emotion)?",
@@ -479,7 +461,7 @@ let appConfig = {
     ],
     foodChallenges: ["2 fruits", "2 bottles water", "No refined sugar", "No fried food"],
     categories: {
-        "🔵 Job Search": "work",
+        "🔵 Self-learn": "focus",
         "🟣 Skill Improvement": "learning",
         "🟢 Problem Solving (DSA)": "learning",
         "📖 Quran memorization": "faith",

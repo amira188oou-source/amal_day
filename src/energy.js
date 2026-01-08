@@ -87,6 +87,8 @@ let index = 0;
 const card = document.getElementById("activityCard");
 const choices = document.getElementById("choices");
 const nextBtn = document.getElementById("next");
+const exitBtn = document.getElementById("exit");
+
 
 /* ======================
    HELPERS
@@ -106,6 +108,9 @@ function renderStep() {
   nextBtn.textContent = index === steps.length - 1 ? "Done" : "Next";
 }
 
+function goBackToPreviousPage() {
+  window.history.back();
+}
 
 function pickRandom(pool, count) {
   return [...pool].sort(() => Math.random() - 0.5).slice(0, count);
@@ -123,6 +128,8 @@ document.querySelectorAll("#choices button").forEach(btn => {
 
     choices.style.display = "none";
     nextBtn.style.display = "block";
+    exitBtn.style.display = "block";
+
 
     steps = pickRandom(activityPools[level], activityCount[level]);
     index = 0;
@@ -133,23 +140,27 @@ document.querySelectorAll("#choices button").forEach(btn => {
 /* ======================
    NEXT / FINISH
 ====================== */
-
 nextBtn.onclick = () => {
-  index++;
-  if (index < steps.length) {
+  if (index < steps.length - 1) {
+    index++;
     renderStep();
   } else {
     card.innerHTML = `
-          <div style="font-size:20px; margin-bottom:16px;">
-          You did enough. Go back, you are ready 💙
-          </div>
-          <img 
-          src="../assets/images/done.jpg" 
-          class="activity-img"
-          alt="Done"
-          >
+      <div style="font-size:20px; margin-bottom:16px;">
+        You did enough. Go back, you are ready 💙
+      </div>
+      <img src="../assets/images/done.jpg" class="activity-img" alt="Done">
     `;
+
     nextBtn.style.display = "none";
-    setTimeout(() => window.history.back(), 1200);
+    exitBtn.style.display = "none";
+
+    // ⏳ small pause then redirect
+    setTimeout(goBackToPreviousPage, 1200);
   }
 };
+exitBtn.onclick = () => {
+  window.history.back();
+};
+
+
