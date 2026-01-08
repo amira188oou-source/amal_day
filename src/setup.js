@@ -2,7 +2,7 @@
 // ===============================
 function askProfile(onDone) {
   render({
-    text: "👋 Welcome! Let's personalize your day.",
+    text: `<span class="doodle-wave">👋</span> Welcome! Let's personalize your day.`,
     subtext: "These details help adjust timings and suggestions."
   });
 
