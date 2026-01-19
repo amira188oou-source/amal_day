@@ -392,7 +392,10 @@ const baseFocusSubjects = [
         name: "❤︎ Java ♥︎", checklist: [
             "Go through the courses",
             "Practice them locally in intelliJ",
-            "See 2 to 3 java interview questions and try to answer them "
+            "Revise core Java basics",
+            "See 2 to 3 java interview questions and try to answer them ",
+            "Write 1 small console project",
+            "Take notes of what you learned"
         ]
     },
     {
@@ -400,42 +403,72 @@ const baseFocusSubjects = [
             "Go through some of the course in Scrimba",
             "Go through some of the course in Oreilly",
             "Practice them locally",
+            "Write basic tests",
             "Document what you learned."
         ]
     },
     {
         name: "🟢 Problem Solving (DSA)", checklist: [
-            "Answer at least 2 questions on leetcode",
-            "explain in 1 line what you have learned and what technique you could use for later"
+            "Choose ONE pattern (Sliding Window / Two Pointers / Binary Search / Recursion / DP / BFS / DFS)",
+            "Solve 5 problems using this pattern",
+            "Solve 5 more problems (optional for mastery)",
+            "Write down common logic you noticed",
+            "Explain why this pattern works",
+            "Write time & space complexity",
+            "Note mistakes you made",
+            "Summarize what you learned in your own words"
         ]
     }
 ];
 
 // Prompts / questions
 const curiosityPrompts = [
-    "Why are default arguments in Python evaluated only once?",
-    "What actually happens under the hood when you use `with`?",
-    "Why is `is` sometimes different from `==`?",
-    "What does Python do when it can’t find a variable name?",
-    "Why are generators more memory-efficient than lists?",
-    "What happens if you modify a list while iterating over it?",
-    "Why is recursion limited in Python, and what enforces that limit?",
-    "What does it mean that everything in Python is an object?",
-    "Why does `len()` feel O(1) for lists?",
-    "What really happens when you import a module?"
+    // ☕ JAVA
+  "What is the difference between JVM, JRE, and JDK?",
+  "Why is String immutable in Java?",
+  "How does HashMap work internally?",
+  "Difference between ArrayList and LinkedList?",
+  "What happens when you create an object in Java?",
+  "Why do we override equals() and hashCode() together?",
+  "What is garbage collection and how does it work?",
+  "Difference between interface and abstract class?",
+  "What is multithreading and why is it needed?",
+  "What is the difference between == and equals()?",
+
+  // ⚛️ REACT
+  "What is Virtual DOM and why is it faster?",
+  "Difference between props and state?",
+  "Why do we use useEffect?",
+  "What problem do hooks solve?",
+  "Difference between controlled and uncontrolled components?",
+  "What is reconciliation in React?",
+  "Why keys are important in lists?",
+  "What happens when state changes?",
+  "Difference between CSR and SSR?",
+  "How does React optimize re-rendering?"
 ];
 
 const knowledgeQuestions = [
-    "What trade-offs does immutability introduce?",
-    "When is caching harmful instead of helpful?",
-    "What makes a function pure, and why does it matter?",
-    "How does a hash table resolve collisions?",
-    "What problem does eventual consistency solve?",
-    "Why is tail recursion not optimized in Python?",
-    "When would you prefer composition over inheritance?",
-    "How do CPU caches affect algorithm performance?",
-    "What guarantees does ACID actually provide?",
-    "Why is lock-free programming difficult?"
+    // ☕ JAVA (5)
+  "Explain heap vs stack memory in Java.",
+  "Difference between HashMap and ConcurrentHashMap?",
+  "Why is String immutable in Java?",
+  "Explain checked vs unchecked exceptions.",
+  "What is garbage collection and how it works?",
+
+  // ⚛️ REACT (5)
+  "Difference between props and state?",
+  "What happens when state updates?",
+  "Explain useEffect lifecycle.",
+  "Difference between useRef and useState?",
+  "How does React optimize re-rendering?",
+
+  // 🟢 DSA (5)
+  "Difference between BFS and DFS?",
+  "Explain time complexity.",
+  "What is sliding window pattern?",
+  "How does binary search work?",
+  "Detect cycle in linked list – how?"
 ];
 
 const reflectionQuestions = [

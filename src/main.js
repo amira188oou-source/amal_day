@@ -1,5 +1,29 @@
 // src/main.js — main flow with centralized step config
 let returnStepAfterWork = null;
+function finishWork(type, title) {
+  const notes = document.getElementById("fw-notes")?.value || "";
+  const mins = document.getElementById("fw-min")?.value || "";
+
+  addNote({
+    type,
+    title,
+    content: notes,
+    meta: {
+      duration: mins,
+      date: new Date().toLocaleString()
+    }
+  });
+
+  if (typeof saveAppState === "function") saveAppState();
+
+  // back 
+  if (returnStepAfterWork !== null) {
+    stepIndex = returnStepAfterWork;
+    returnStepAfterWork = null;
+    renderCurrentStep();
+  }
+}
+
 
 function loadStateFromURL() {
   const p = new URLSearchParams(location.search);
@@ -95,10 +119,12 @@ function next() {
 function openOther() {
   returnStepAfterWork = stepIndex;
   clearUI();
+
   render({
-    text: "📌 Essential Task",
+    text: "📌 Mandatory Task",
     subtext: "Take care of this, your flow will be waiting"
   });
+
   const c = document.getElementById("checklist");
   c.innerHTML = `
     <div class="field">
@@ -107,58 +133,100 @@ function openOther() {
     </div>
     <div class="field">
       <label>What do you have to do?</label>
-      <textarea id="fw-notes" placeholder="Describe the surprise task..."></textarea>
+      <textarea id="fw-notes"></textarea>
     </div>
   `;
+
   const btns = document.getElementById("buttons");
   btns.innerHTML = "";
 
+  // START
   btns.appendChild(
     button("Start", () => {
       const mins = Number(document.getElementById("fw-min").value || 25);
-      if (typeof enableAudio === "function") enableAudio();
-      startTimer(mins);
-      if (typeof saveAppState === "function") saveAppState();
+
+      startTimer(mins, () => {
+        btns.innerHTML = "";
+        btns.appendChild(
+          button("DONE", () => {
+            finishWork("free-other", "Mandatory Task");
+          }, "primary")
+        );
+      });
     })
   );
-  btns.appendChild(
-    button("Done", () => {
-      const notesEl = document.getElementById("fw-notes");
-      if (typeof stopTimer === "function") stopTimer();
-      if (typeof stopBg === "function") stopBg();
-      if (window.appConfig?.sound?.notifications && typeof window.playNotification === "function") {
-        try { window.playNotification("end"); } catch(e){}
-      }
-      addNote({
-        type: "free-other",
-        title: "Obligatory Task",
-        content: notesEl.value || ""
-      });
-      if (typeof saveAppState === "function") saveAppState();
-      if (returnStepAfterWork !== null) {
-        stepIndex = returnStepAfterWork;
-        returnStepAfterWork = null;
-        renderCurrentStep();
-      }
-    }, "secondary")
-  );
 
-  // Back (no save)
+  // BACK no save
   btns.appendChild(
     button("Back", () => {
       if (typeof stopTimer === "function") stopTimer();
-      if (typeof stopBg === "function") stopBg();
-      if (typeof saveAppState === "function") saveAppState();
+
       if (returnStepAfterWork !== null) {
         stepIndex = returnStepAfterWork;
         returnStepAfterWork = null;
         renderCurrentStep();
-      } else {
-        next();
       }
     }, "ghost")
   );
 }
+
+
+function openFreeWork() {
+  returnStepAfterWork = stepIndex;
+  clearUI();
+
+  render({
+    text: "⏱️ Free Work Session",
+    subtext: "Focus freely. When you’re done, click Done to return"
+  });
+
+  const c = document.getElementById("checklist");
+  c.innerHTML = `
+    <div class="field">
+      <label>Duration (minutes)</label>
+      <input id="fw-min" type="number" min="5" value="25">
+    </div>
+    <div class="field">
+      <label>What are you working on?</label>
+      <textarea id="fw-notes"></textarea>
+    </div>
+  `;
+
+  const btns = document.getElementById("buttons");
+  btns.innerHTML = "";
+
+  // START
+  btns.appendChild(
+    button("Start Work", () => {
+      const mins = Number(document.getElementById("fw-min").value || 25);
+
+      startTimer(mins, () => {
+        // ⏰end time
+        btns.innerHTML = "";
+        btns.appendChild(
+          button("DONE", () => {
+            finishWork("free-work", "Free Work Session");
+          }, "primary")
+        );
+      });
+    })
+  );
+
+  // BACK withou save
+  btns.appendChild(
+    button("Back", () => {
+      if (typeof stopTimer === "function") stopTimer();
+
+      if (returnStepAfterWork !== null) {
+        stepIndex = returnStepAfterWork;
+        returnStepAfterWork = null;
+        renderCurrentStep();
+      }
+    }, "ghost")
+  );
+}
+
+
 
 function renderCurrentStep() {
   if (typeof restoreStepAt === "function") restoreStepAt(stepIndex);

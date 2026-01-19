@@ -121,6 +121,22 @@ function renderMealBar() {
     };
 
     bar.appendChild(left);
+    // 🕌 Adkar Masa2 button
+    const adkarBtn = document.createElement("button");
+    adkarBtn.className = "action-btn ghost sm";
+    adkarBtn.innerText = "🕌 Adkar Masa2";
+
+    adkarBtn.onclick = () => {
+      clearUI();
+      render({
+        text: "🕌 Adkar Al-Masa2",
+        subtext: "Read calmly – 10 minutes"
+      });
+      startTimer(10, next);
+    };
+
+    bar.appendChild(adkarBtn);
+
     bar.appendChild(close);
     document.body.appendChild(bar);
   }
